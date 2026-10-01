@@ -1,0 +1,113 @@
+import java.util.Scanner;
+
+/*
+ * TUGAS PERTEMUAN KE 4 - PERULANGAN
+ * 1. Cek palindrome kata/frasa
+ * 2. Cari angka palindrome terdekat selanjutnya
+ */
+public class TugasPerulangan {
+
+    static Scanner in = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        while (true) {
+            System.out.println();
+            System.out.println("=== TUGAS PERTEMUAN KE 4 ===");
+            System.out.println("1. Cek Palindrome");
+            System.out.println("2. Palindrome Terdekat Selanjutnya");
+            System.out.println("0. Keluar");
+            System.out.print("Pilih soal : ");
+            String pilihan = bacaBaris();
+            System.out.println();
+
+            switch (pilihan) {
+                case "1": soal1(); break;
+                case "2": soal2(); break;
+                case "0": System.out.println("Terima kasih."); return;
+                default: System.out.println("Pilihan tidak tersedia.");
+            }
+        }
+    }
+
+    // ===================== SOAL 1 : CEK PALINDROME =====================
+    static void soal1() {
+        System.out.print("Masukkan kata/frasa : ");
+        String teks = bacaBaris();
+
+        if (isPalindrome(teks)) {
+            System.out.println(teks + " : palindrome");
+        } else {
+            System.out.println(teks + " : bukan palindrome");
+        }
+    }
+
+    // Spasi, tanda baca, dan huruf besar/kecil diabaikan.
+    // Dua penunjuk (kiri & kanan) bergerak saling mendekat.
+    static boolean isPalindrome(String teks) {
+        int kiri = 0;
+        int kanan = teks.length() - 1;
+
+        while (kiri < kanan) {
+            char a = teks.charAt(kiri);
+            char b = teks.charAt(kanan);
+
+            if (!Character.isLetterOrDigit(a)) {
+                kiri++;
+            } else if (!Character.isLetterOrDigit(b)) {
+                kanan--;
+            } else {
+                if (Character.toLowerCase(a) != Character.toLowerCase(b)) {
+                    return false;
+                }
+                kiri++;
+                kanan--;
+            }
+        }
+        return true;
+    }
+
+    // ===================== SOAL 2 : PALINDROME TERDEKAT =====================
+    static void soal2() {
+        System.out.print("Masukkan angka : ");
+        long input;
+        try {
+            input = Long.parseLong(bacaBaris());
+        } catch (NumberFormatException e) {
+            System.out.println("Input harus berupa bilangan bulat.");
+            return;
+        }
+
+        if (input < 0) {
+            System.out.println("Input tidak boleh negatif.");
+            return;
+        }
+
+        // cari mulai dari angka setelah input sampai ketemu palindrome
+        long kandidat = input + 1;
+        while (!isAngkaPalindrome(kandidat)) {
+            kandidat++;
+        }
+
+        System.out.println("input : " + input + ", output : " + kandidat);
+    }
+
+    // membalik angka digit demi digit, lalu bandingkan dengan angka asli
+    static boolean isAngkaPalindrome(long angka) {
+        long asli = angka;
+        long balik = 0;
+
+        while (angka > 0) {
+            balik = balik * 10 + angka % 10;
+            angka /= 10;
+        }
+        return asli == balik;
+    }
+
+    // ===================== INPUT =====================
+    static String bacaBaris() {
+        if (!in.hasNextLine()) {
+            System.exit(0);
+        }
+        return in.nextLine().trim();
+    }
+}
